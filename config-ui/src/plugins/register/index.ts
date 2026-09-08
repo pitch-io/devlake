@@ -32,6 +32,7 @@ import { GitHubConfig } from './github';
 import { GhCopilotConfig } from './gh-copilot';
 import { GitLabConfig } from './gitlab';
 import { GrafanaIrmConfig } from './grafana_irm';
+import { DatadogConfig } from './datadog';
 import { IncidentioConfig } from './incidentio';
 import { JenkinsConfig } from './jenkins';
 import { JiraConfig } from './jira';
@@ -68,6 +69,7 @@ export const pluginConfigs: IPluginConfig[] = [
   GhCopilotConfig,
   GitLabConfig,
   GrafanaIrmConfig,
+  DatadogConfig,
   IncidentioConfig,
   JenkinsConfig,
   JiraConfig,
