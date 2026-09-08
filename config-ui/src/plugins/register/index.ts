@@ -31,6 +31,7 @@ import { CursorConfig } from './cursor';
 import { GitHubConfig } from './github';
 import { GhCopilotConfig } from './gh-copilot';
 import { GitLabConfig } from './gitlab';
+import { DatadogConfig } from './datadog';
 import { IncidentioConfig } from './incidentio';
 import { JenkinsConfig } from './jenkins';
 import { JiraConfig } from './jira';
@@ -63,6 +64,7 @@ export const pluginConfigs: IPluginConfig[] = [
   GitHubConfig,
   GhCopilotConfig,
   GitLabConfig,
+  DatadogConfig,
   IncidentioConfig,
   JenkinsConfig,
   JiraConfig,
