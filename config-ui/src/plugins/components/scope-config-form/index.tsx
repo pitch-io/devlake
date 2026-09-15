@@ -38,6 +38,7 @@ import { ArgoCDTransformation } from '@/plugins/register/argocd';
 import { GhCopilotTransformation } from '@/plugins/register/gh-copilot';
 import { AsanaTransformation } from '@/plugins/register/asana';
 import { ClickUpTransformation } from '@/plugins/register/clickup';
+import { DatadogTransformation } from '@/plugins/register/datadog';
 import { DOC_URL } from '@/release';
 import { operator } from '@/utils';
 
@@ -259,6 +260,14 @@ export const ScopeConfigForm = ({
 
               {plugin === 'circleci' && (
                 <CircleCITransformation
+                  entities={entities}
+                  transformation={transformation}
+                  setTransformation={setTransformation}
+                />
+              )}
+
+              {plugin === 'datadog' && (
+                <DatadogTransformation
                   entities={entities}
                   transformation={transformation}
                   setTransformation={setTransformation}
