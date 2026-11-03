@@ -31,17 +31,22 @@ import { CursorConfig } from './cursor';
 import { GitHubConfig } from './github';
 import { GhCopilotConfig } from './gh-copilot';
 import { GitLabConfig } from './gitlab';
+import { GrafanaIrmConfig } from './grafana_irm';
+import { DatadogConfig } from './datadog';
 import { IncidentioConfig } from './incidentio';
 import { JenkinsConfig } from './jenkins';
 import { JiraConfig } from './jira';
 import { KiroConfig } from './kiro';
 import { LinearConfig } from './linear';
 import { PagerDutyConfig } from './pagerduty';
+import { RedmineConfig } from './redmine';
 import { RootlyConfig } from './rootly';
 import { SonarQubeConfig } from './sonarqube';
 import { TAPDConfig } from './tapd';
 import { WebhookConfig } from './webhook';
+import { YoutrackConfig } from './youtrack';
 import { ZenTaoConfig } from './zentao';
+import { ZephyrConfig } from './zephyr';
 import { OpsgenieConfig } from './opsgenie';
 import { TeambitionConfig } from './teambition';
 import { TestmoConfig } from './testmo';
@@ -63,12 +68,15 @@ export const pluginConfigs: IPluginConfig[] = [
   GitHubConfig,
   GhCopilotConfig,
   GitLabConfig,
+  GrafanaIrmConfig,
+  DatadogConfig,
   IncidentioConfig,
   JenkinsConfig,
   JiraConfig,
   KiroConfig,
   LinearConfig,
   PagerDutyConfig,
+  RedmineConfig,
   RootlyConfig,
   SlackConfig,
   TempoConfig,
@@ -76,7 +84,9 @@ export const pluginConfigs: IPluginConfig[] = [
   TAPDConfig,
   TestmoConfig,
   ZenTaoConfig,
+  ZephyrConfig,
   WebhookConfig,
+  YoutrackConfig,
   OpsgenieConfig,
   TeambitionConfig,
 ].sort((a, b) => a.sort - b.sort);

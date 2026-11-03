@@ -32,12 +32,23 @@ go run ./test/init.go
 make e2e-test
 ```
 
-The service E2E tests compile the `gitextractor` plugin, which links against `libgit2`. If `libgit2` is installed in
-a non-standard location, expose it through `pkg-config` and add an rpath so the test binary can load the dynamic
-library at runtime:
+The service E2E tests run the `gitextractor` plugin, which reads repositories
+with the `git` command line. Make sure `git` (2.31 or newer) is installed.
+
+### Planning-failure database regression test
+
+`TestBlueprintPlanFailureDatabase` verifies failed-pipeline history, exclusion from
+the pending queue, and atomic rollback when label insertion fails. Use dedicated,
+disposable databases: the test creates pipeline, label, and task tables, and cleans
+up its own records. It does not require external data sources or a running server.
+
+After generating the core and helper mocks, run from `backend/`:
 
 ```bash
-export PKG_CONFIG_PATH=/path/to/libgit2/build
-export CGO_LDFLAGS='-L/path/to/libgit2/build -Wl,-rpath,/path/to/libgit2/build'
-make e2e-test
+export DEVLAKE_TEST_MYSQL_DSN='merico:merico@tcp(127.0.0.1:3306)/blueprint_test?charset=utf8mb4&parseTime=True&loc=UTC'
+export DEVLAKE_TEST_POSTGRES_DSN='host=127.0.0.1 user=postgres dbname=blueprint_test sslmode=disable'
+go test -count=1 -v -run TestBlueprintPlanFailureDatabase ./server/services
 ```
+
+Each database subtest is skipped when its DSN is unset; ordinary unit tests do not
+require database servers.

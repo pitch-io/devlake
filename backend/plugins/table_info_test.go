@@ -33,6 +33,7 @@ import (
 	clickup "github.com/apache/devlake/plugins/clickup/impl"
 	cursor "github.com/apache/devlake/plugins/cursor/impl"
 	customize "github.com/apache/devlake/plugins/customize/impl"
+	datadog "github.com/apache/devlake/plugins/datadog/impl"
 	dora "github.com/apache/devlake/plugins/dora/impl"
 	feishu "github.com/apache/devlake/plugins/feishu/impl"
 	copilot "github.com/apache/devlake/plugins/gh-copilot/impl"
@@ -41,6 +42,7 @@ import (
 	github "github.com/apache/devlake/plugins/github/impl"
 	githubGraphql "github.com/apache/devlake/plugins/github_graphql/impl"
 	gitlab "github.com/apache/devlake/plugins/gitlab/impl"
+	grafanaIrm "github.com/apache/devlake/plugins/grafana_irm/impl"
 	icla "github.com/apache/devlake/plugins/icla/impl"
 	incidentio "github.com/apache/devlake/plugins/incidentio/impl"
 	issueTrace "github.com/apache/devlake/plugins/issue_trace/impl"
@@ -49,6 +51,7 @@ import (
 	kiro "github.com/apache/devlake/plugins/kiro/impl"
 	linear "github.com/apache/devlake/plugins/linear/impl"
 	linker "github.com/apache/devlake/plugins/linker/impl"
+	monorepo "github.com/apache/devlake/plugins/monorepo/impl"
 	opsgenie "github.com/apache/devlake/plugins/opsgenie/impl"
 	org "github.com/apache/devlake/plugins/org/impl"
 	pagerduty "github.com/apache/devlake/plugins/pagerduty/impl"
@@ -64,6 +67,7 @@ import (
 	testmo "github.com/apache/devlake/plugins/testmo/impl"
 	trello "github.com/apache/devlake/plugins/trello/impl"
 	webhook "github.com/apache/devlake/plugins/webhook/impl"
+	youtrack "github.com/apache/devlake/plugins/youtrack/impl"
 	zentao "github.com/apache/devlake/plugins/zentao/impl"
 )
 
@@ -80,6 +84,7 @@ func Test_GetPluginTablesInfo(t *testing.T) {
 	checker.FeedIn("argocd/models", argocd.ArgoCD{}.GetTablesInfo)
 	checker.FeedIn("asana/models", asana.Asana{}.GetTablesInfo)
 	checker.FeedIn("customize/models", customize.Customize{}.GetTablesInfo)
+	checker.FeedIn("datadog/models", datadog.Datadog{}.GetTablesInfo)
 	checker.FeedIn("dora/models", dora.Dora{}.GetTablesInfo)
 	checker.FeedIn("feishu/models", feishu.Feishu{}.GetTablesInfo)
 	checker.FeedIn("gitee/models", gitee.Gitee{}.GetTablesInfo)
@@ -87,6 +92,7 @@ func Test_GetPluginTablesInfo(t *testing.T) {
 	checker.FeedIn("github/models", github.Github{}.GetTablesInfo)
 	checker.FeedIn("github_graphql", githubGraphql.GithubGraphql{}.GetTablesInfo)
 	checker.FeedIn("gitlab/models", gitlab.Gitlab{}.GetTablesInfo)
+	checker.FeedIn("grafana_irm/models", grafanaIrm.GrafanaIrm{}.GetTablesInfo)
 	checker.FeedIn("icla/models", icla.Icla{}.GetTablesInfo)
 	checker.FeedIn("incidentio/models", incidentio.Incidentio{}.GetTablesInfo)
 	checker.FeedIn("jenkins/models", jenkins.Jenkins{}.GetTablesInfo)
@@ -106,6 +112,7 @@ func Test_GetPluginTablesInfo(t *testing.T) {
 	checker.FeedIn("testmo/models", testmo.Testmo{}.GetTablesInfo)
 	checker.FeedIn("trello/models", trello.Trello{}.GetTablesInfo)
 	checker.FeedIn("webhook/models", webhook.Webhook{}.GetTablesInfo)
+	checker.FeedIn("youtrack/models", youtrack.Youtrack{}.GetTablesInfo)
 	checker.FeedIn("zentao/models", zentao.Zentao{}.GetTablesInfo)
 	checker.FeedIn("claude_code/models", claudeCode.ClaudeCode{}.GetTablesInfo)
 	checker.FeedIn("cursor/models", cursor.Cursor{}.GetTablesInfo)
@@ -116,6 +123,7 @@ func Test_GetPluginTablesInfo(t *testing.T) {
 	checker.FeedIn("issue_trace/models", issueTrace.IssueTrace{}.GetTablesInfo)
 	checker.FeedIn("kiro/models", kiro.Kiro{}.GetTablesInfo)
 	checker.FeedIn("gh-copilot/models", copilot.GhCopilot{}.GetTablesInfo)
+	checker.FeedIn("monorepo/models", monorepo.Monorepo{}.GetTablesInfo)
 	err := checker.Verify()
 	if err != nil {
 		t.Error(err)

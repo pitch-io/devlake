@@ -58,9 +58,6 @@ updates:
       # The Go toolchain directive is coupled to the CI bootstrap version and
       # to the golang base images; it is raised deliberately, never by a bot.
       - dependency-name: go
-      # git2go is ABI-coupled to the libgit2 version installed in the builder
-      # image. A mismatch fails at link time, so this is always manual.
-      - dependency-name: github.com/libgit2/git2go/*
       # swag v2 is still a release candidate and requires regenerating every
       # swagger annotation. Tracked as an externally gated upgrade.
       - dependency-name: github.com/swaggo/swag
@@ -102,8 +99,9 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: build(deps)
-    # This directory has no lockfile. Without `increase`, Dependabot would stay
-    # silent as long as a new release still satisfies the declared caret range.
+    # Raise the caret range in package.json together with package-lock.json so
+    # the declared minimum always matches the locked version. The default
+    # `auto` may classify this non-private package as a library and only widen.
     versioning-strategy: increase
     groups:
       e2e-minor-patch:
@@ -119,6 +117,8 @@ updates:
       - /backend/python
       - /backend/python/pydevlake
       - /backend/python/plugins/azuredevops
+      - /backend/python/plugins/redmine
+      - /backend/python/plugins/zephyr
       - /backend/python/test/fakeplugin
       - /grafana/scripts
     schedule:
@@ -263,6 +263,17 @@ updates:
   # Dependabot never proposes a change of action *namespace*. Migrating to a
   # differently owned action stays a manual step because ASF infrastructure
   # maintains an allow-list of permitted actions.
+  #
+  # Dependabot knows nothing about that allow-list: it resolves the newest
+  # upstream tag and opens a PR whether or not ASF has reviewed the release
+  # yet. The allow-list is only updated when infra merges the matching
+  # Dependabot PR in apache/infrastructure-actions, so a bump proposed here
+  # before that review has landed cannot run and cannot be merged (PR #9116
+  # proposed docker/setup-qemu-action v4.3.0 on 2026-09-05, while the allow-list
+  # still stopped at v4.2.0). The cooldown below is the ASF-recommended way to
+  # let that review land first; `.github/workflows/asf-allowlist-check.yml`
+  # turns any remaining race into a visible failing check instead of a silent
+  # "Startup failure" at run time.
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -270,6 +281,8 @@ updates:
       day: monday
       time: "06:00"
       timezone: Etc/UTC
+    cooldown:
+      default-days: 4
     open-pull-requests-limit: 5
     commit-message:
       prefix: build(deps)

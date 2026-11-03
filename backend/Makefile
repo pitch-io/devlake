@@ -22,14 +22,22 @@ TAG ?= $(shell if [ -d .git ]; then git tag --points-at HEAD; else echo "local_b
 IMAGE_REPO ?= "apache"
 VERSION = $(TAG)@$(SHA)
 PYTHON_DIR ?= "./python"
+MOCKERY_VERSION ?= v3.9.0
+# Always resolve mockery through the module cache instead of relying on whatever
+# `mockery` happens to be on the PATH: the CI builder image ships mockery v2,
+# which cannot read the v3 YAML configuration.
+# The tool must be built for the host, not for the cross-compile target that
+# `backend/Dockerfile` exports (GOARCH/CC for `make all`), hence the empty
+# GOOS/GOARCH and CGO_ENABLED=0.
+MOCKERY ?= GOOS= GOARCH= CGO_ENABLED=0 go run github.com/vektra/mockery/v3@$(MOCKERY_VERSION)
 
 
 all: build
 
 go-dep:
-	go install github.com/vektra/mockery/v3@v3.7.4
+	go install github.com/vektra/mockery/v3@$(MOCKERY_VERSION)
 	go install github.com/swaggo/swag/cmd/swag@v1.16.6
-	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0
 
 go-dev-tools:
 	# go install github.com/atombender/go-jsonschema/cmd/gojsonschema@latest
@@ -46,39 +54,56 @@ dep: go-dep python-dep
 swag: mock
 	scripts/swag.sh
 
+# Regenerate plugins/all, the package that links the Go plugins into the server
+# binary. Run it after adding, removing or renaming a plugin; CI checks that the
+# checked-in file matches the tree.
+#
+# GOOS/GOARCH are cleared because `backend/Dockerfile` exports them to
+# cross-compile the server: `go run` would otherwise build the generator for the
+# target platform and fail with "exec format error" on the build host. Same
+# reason as MOCKERY above.
+plugins-registry:
+	GOOS= GOARCH= CGO_ENABLED=0 go run ./tools/pluginsgen
+
 build-plugin:
 	scripts/build-plugins.sh
 
 build-plugin-debug:
 	DEVLAKE_DEBUG=1 scripts/build-plugins.sh
 
-build-server: swag
+build-server: plugins-registry swag
 	VERSION=$(VERSION) scripts/build-server.sh
 
 build-python: #don't mix this with the other build commands
 	scripts/build-python.sh
 
-build: build-plugin build-server
+# `build` produces the only artifact the release ships: one binary with the
+# framework, the API and every plugin in the generated registry compiled in.
+# Use build-plugin when you want shared objects instead, either to sideload
+# them into an existing binary or to ship a core-only server.
+build: build-server
 
 run:
 	go run server/main.go
 
-dev: build-plugin build-python run
+dev: build-python run
 
 godev:
-	DISABLED_REMOTE_PLUGINS=true make build-plugin run
+	DISABLED_REMOTE_PLUGINS=true make run
 
 debug: build-plugin-debug
 	dlv debug server/main.go
 
 mock:
-	rm -rf mocks
+	# Remove previously generated mocks but keep the tracked doc.go placeholders,
+	# which keep the mock import paths resolvable for `go mod tidy`.
+	if [ -d mocks ]; then find mocks -type f ! -name doc.go -delete && find mocks -type d -empty -delete; fi
 	# mockery v3 is configured via YAML instead of CLI flags. Two invocations are
 	# required (and must run in this order): `helpers/unithelper` imports the
 	# generated `mocks/core/...` packages, and v3 type-checks the sources it
 	# parses, so the core mocks have to exist before the helpers tree loads.
-	mockery --config .mockery.core.yml
-	mockery --config .mockery.helpers.yml
+	$(MOCKERY) --config .mockery.core.yml
+	$(MOCKERY) --config .mockery.helpers.yml
 
 test: unit-test e2e-test
 

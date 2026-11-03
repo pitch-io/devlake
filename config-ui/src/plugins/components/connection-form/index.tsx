@@ -18,7 +18,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { isEqual, pick } from 'lodash';
-import { Flex, Alert, Button } from 'antd';
+import { Flex, Alert, Button, message } from 'antd';
 
 import API from '@/api';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -52,6 +52,12 @@ const buildUpdateTestPayload = (connection: any, values: any, customHeaders: ICu
   token: isEqual(connection?.token, values.token) ? undefined : values.token,
   appId: isEqual(connection?.appId, values.appId) ? undefined : values.appId,
   secretKey: isEqual(connection?.secretKey, values.secretKey) ? undefined : values.secretKey,
+  cloudId: isEqual(connection?.cloudId, values.cloudId) ? undefined : values.cloudId,
+  clientId: isEqual(connection?.clientId, values.clientId) ? undefined : values.clientId,
+  clientSecret: isEqual(connection?.clientSecret, values.clientSecret) ? undefined : values.clientSecret,
+  apiKey: isEqual(connection?.apiKey, values.apiKey) ? undefined : values.apiKey,
+  applicationKey: isEqual(connection?.applicationKey, values.applicationKey) ? undefined : values.applicationKey,
+  webUrl: isEqual(connection?.webUrl, values.webUrl) ? undefined : values.webUrl,
   proxy: isEqual(connection?.proxy, values.proxy) ? undefined : values.proxy,
   rateLimitPerHour: isEqual(connection?.rateLimitPerHour, values.rateLimitPerHour)
     ? undefined
@@ -74,6 +80,12 @@ const buildCreateTestPayload = (initialValues: any, values: any, customHeaders: 
     'authMethod',
     'appId',
     'secretKey',
+    'cloudId',
+    'clientId',
+    'clientSecret',
+    'apiKey',
+    'applicationKey',
+    'webUrl',
     'accessKeyId',
     'secretAccessKey',
     'region',
@@ -125,7 +137,7 @@ export const ConnectionForm = ({ plugin, connectionId, onSuccess }: Props) => {
 
   const handleTest = async () => {
     const isUpdate = type === 'update' && !!connectionId;
-    await operator(
+    const [success, res] = await operator(
       () =>
         isUpdate
           ? API.connection.test(
@@ -137,8 +149,13 @@ export const ConnectionForm = ({ plugin, connectionId, onSuccess }: Props) => {
       {
         setOperating,
         formatMessage: () => 'Test Connection Successfully.',
+        hideToast: !!pluginConfig.connection.showTestResultMessage,
       },
     );
+
+    if (success && pluginConfig.connection.showTestResultMessage) {
+      message.success(res?.message || 'Test Connection Successfully.');
+    }
   };
 
   const handleSave = async () => {
@@ -163,15 +180,17 @@ export const ConnectionForm = ({ plugin, connectionId, onSuccess }: Props) => {
 
   return (
     <Flex vertical gap="small">
-      <Alert
-        message={
-          <>
-            {' '}
-            If you run into any problems while creating a new connection for {name},{' '}
-            <ExternalLink link={docLink}>check out this doc</ExternalLink>.
-          </>
-        }
-      />
+      {docLink && (
+        <Alert
+          message={
+            <>
+              {' '}
+              If you run into any problems while creating a new connection for {name},{' '}
+              <ExternalLink link={docLink}>check out this doc</ExternalLink>.
+            </>
+          }
+        />
+      )}
       <Form
         type={type}
         name={name}

@@ -65,6 +65,7 @@ import (
 	github "github.com/apache/devlake/plugins/github/impl"
 	githubGraphql "github.com/apache/devlake/plugins/github_graphql/impl"
 	gitlab "github.com/apache/devlake/plugins/gitlab/impl"
+	grafanaIrm "github.com/apache/devlake/plugins/grafana_irm/impl"
 	icla "github.com/apache/devlake/plugins/icla/impl"
 	incidentio "github.com/apache/devlake/plugins/incidentio/impl"
 	issueTrace "github.com/apache/devlake/plugins/issue_trace/impl"
@@ -73,6 +74,7 @@ import (
 	kiro "github.com/apache/devlake/plugins/kiro/impl"
 	linear "github.com/apache/devlake/plugins/linear/impl"
 	linker "github.com/apache/devlake/plugins/linker/impl"
+	monorepo "github.com/apache/devlake/plugins/monorepo/impl"
 	opsgenie "github.com/apache/devlake/plugins/opsgenie/impl"
 	org "github.com/apache/devlake/plugins/org/impl"
 	pagerduty "github.com/apache/devlake/plugins/pagerduty/impl"
@@ -88,6 +90,7 @@ import (
 	testmo "github.com/apache/devlake/plugins/testmo/impl"
 	trello "github.com/apache/devlake/plugins/trello/impl"
 	webhook "github.com/apache/devlake/plugins/webhook/impl"
+	youtrack "github.com/apache/devlake/plugins/youtrack/impl"
 	zentao "github.com/apache/devlake/plugins/zentao/impl"
 )
 
@@ -116,6 +119,7 @@ func allGoPlugins() []plugin.PluginMeta {
 		github.Github{},
 		githubGraphql.GithubGraphql{},
 		gitlab.Gitlab{},
+		grafanaIrm.GrafanaIrm{},
 		icla.Icla{},
 		incidentio.Incidentio{},
 		issueTrace.IssueTrace{},
@@ -124,6 +128,7 @@ func allGoPlugins() []plugin.PluginMeta {
 		kiro.Kiro{},
 		linear.Linear{},
 		linker.Linker{},
+		monorepo.Monorepo{},
 		opsgenie.Opsgenie{},
 		org.Org{},
 		pagerduty.PagerDuty{},
@@ -139,6 +144,7 @@ func allGoPlugins() []plugin.PluginMeta {
 		testmo.Testmo{},
 		trello.Trello{},
 		webhook.Webhook{},
+		youtrack.Youtrack{},
 		zentao.Zentao{},
 	}
 }

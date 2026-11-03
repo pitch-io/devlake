@@ -25,6 +25,7 @@ import (
 	bamboo "github.com/apache/devlake/plugins/bamboo/impl"
 	bitbucket "github.com/apache/devlake/plugins/bitbucket/impl"
 	customize "github.com/apache/devlake/plugins/customize/impl"
+	datadog "github.com/apache/devlake/plugins/datadog/impl"
 	dora "github.com/apache/devlake/plugins/dora/impl"
 	feishu "github.com/apache/devlake/plugins/feishu/impl"
 	gitee "github.com/apache/devlake/plugins/gitee/impl"
@@ -32,6 +33,7 @@ import (
 	github "github.com/apache/devlake/plugins/github/impl"
 	githubGraphql "github.com/apache/devlake/plugins/github_graphql/impl"
 	gitlab "github.com/apache/devlake/plugins/gitlab/impl"
+	grafanaIrm "github.com/apache/devlake/plugins/grafana_irm/impl"
 	icla "github.com/apache/devlake/plugins/icla/impl"
 	incidentio "github.com/apache/devlake/plugins/incidentio/impl"
 	jenkins "github.com/apache/devlake/plugins/jenkins/impl"
@@ -65,6 +67,7 @@ func loadGoPlugins() []plugin.PluginMeta {
 		bamboo.Bamboo{},
 		bitbucket.Bitbucket{},
 		customize.Customize{},
+		datadog.Datadog{},
 		dora.Dora{},
 		feishu.Feishu{},
 		gitee.Gitee{},
@@ -72,6 +75,7 @@ func loadGoPlugins() []plugin.PluginMeta {
 		github.Github{},
 		githubGraphql.GithubGraphql{},
 		gitlab.Gitlab{},
+		grafanaIrm.GrafanaIrm{},
 		icla.Icla{},
 		incidentio.Incidentio{},
 		jenkins.Jenkins{},
